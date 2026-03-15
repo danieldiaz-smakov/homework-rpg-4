@@ -17,13 +17,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== Homework 4 Demo: Bridge + Composite ===\n");
 
-        // TODO: build leaves
         HeroUnit warrior = new HeroUnit("Arthas", 140, 30);
         HeroUnit mage = new HeroUnit("Jaina", 90, 40);
         EnemyUnit goblin = new EnemyUnit("Goblin", 70, 20);
         EnemyUnit orc = new EnemyUnit("Orc", 120, 25);
 
-        // TODO: build composite hierarchy (nested)
         PartyComposite heroes = new PartyComposite("Heroes");
         heroes.add(warrior);
         heroes.add(mage);
@@ -32,24 +30,29 @@ public class Main {
         frontline.add(goblin);
         frontline.add(orc);
 
+        RaidGroup enemySquad = new RaidGroup("Enemy Squad");
+        enemySquad.add(frontline);
+
         RaidGroup enemies = new RaidGroup("Enemy Raid");
-        enemies.add(frontline);
+        enemies.add(enemySquad);
 
         System.out.println("--- Team Structures ---");
         heroes.printTree("");
         enemies.printTree("");
 
-        // TODO: Bridge combinations
         Skill slashFire = new SingleTargetSkill("Slash", 20, new FireEffect());
         Skill slashIce = new SingleTargetSkill("Slash", 20, new IceEffect());
         Skill stormFire = new AreaSkill("Storm", 15, new FireEffect());
+        Skill stormIce = new AreaSkill("Storm", 15, new IceEffect());
 
-        System.out.println("\n--- Bridge Preview ---");
+        System.out.println("\n--- Bridge Preview (same skill, different effects) ---");
         System.out.println(slashFire.getSkillName() + " using " + slashFire.getEffectName());
         System.out.println(slashIce.getSkillName() + " using " + slashIce.getEffectName());
+        System.out.println("\n--- Bridge Preview (same effect, different skills) ---");
         System.out.println(stormFire.getSkillName() + " using " + stormFire.getEffectName());
+        System.out.println(slashFire.getSkillName() + " using " + slashFire.getEffectName());
+        System.out.println(stormIce.getSkillName() + " using " + stormIce.getEffectName());
 
-        // TODO: run raid
         RaidEngine engine = new RaidEngine().setRandomSeed(42L);
         RaidResult result = engine.runRaid(heroes, enemies, slashFire, stormFire);
 
